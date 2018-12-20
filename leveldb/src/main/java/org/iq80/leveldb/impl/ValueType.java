@@ -17,9 +17,18 @@
  */
 package org.iq80.leveldb.impl;
 
+/**
+ * 数据类型
+ */
 public enum ValueType
 {
+    /**
+     * 删除的数据
+     */
     DELETION(0x00),
+    /**
+     * 有效数据
+     */
     VALUE(0x01);
 
     public static ValueType getValueTypeByPersistentId(int persistentId)

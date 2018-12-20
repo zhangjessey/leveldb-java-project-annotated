@@ -19,6 +19,9 @@ package org.iq80.leveldb.impl;
 
 import org.iq80.leveldb.util.Slice;
 
+/**
+ * 等效EncodeString(InternalKey.size()) + InternalKey
+ */
 public class LookupKey
 {
     private final InternalKey key;

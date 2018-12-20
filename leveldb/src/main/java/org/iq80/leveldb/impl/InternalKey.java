@@ -26,9 +26,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.iq80.leveldb.util.SizeOf.SIZE_OF_LONG;
 
+/**
+ * MemTable的key
+ * 等效userKey+sequenceNumber+valueType
+ */
 public class InternalKey
 {
     private final Slice userKey;
+    /**
+     * 操作的序列号，表示数据新旧程度
+     */
     private final long sequenceNumber;
     private final ValueType valueType;
 

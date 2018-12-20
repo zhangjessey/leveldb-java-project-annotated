@@ -21,6 +21,9 @@ import org.iq80.leveldb.util.Slice;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * 查询结果
+ */
 public class LookupResult
 {
     public static LookupResult ok(LookupKey key, Slice value)

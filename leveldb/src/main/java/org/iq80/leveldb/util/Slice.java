@@ -40,6 +40,10 @@ import static org.iq80.leveldb.util.SizeOf.SIZE_OF_SHORT;
 /**
  * Little Endian slice of a byte array.
  */
+
+/**
+ * 小端模式的字节数据片段
+ */
 public final class Slice
         implements Comparable<Slice>
 {

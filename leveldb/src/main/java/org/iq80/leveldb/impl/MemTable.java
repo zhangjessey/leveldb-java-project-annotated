@@ -29,10 +29,19 @@ import java.util.concurrent.atomic.AtomicLong;
 import static java.util.Objects.requireNonNull;
 import static org.iq80.leveldb.util.SizeOf.SIZE_OF_LONG;
 
+/**
+ * DB的内存结构
+ */
 public class MemTable
         implements SeekingIterable<InternalKey, Slice>
 {
+    /**
+     * 利用跳表存储
+     */
     private final ConcurrentSkipListMap<InternalKey, Slice> table;
+    /**
+     * 近似的内存占用
+     */
     private final AtomicLong approximateMemoryUsage = new AtomicLong();
 
     public MemTable(InternalKeyComparator internalKeyComparator)
@@ -50,6 +59,9 @@ public class MemTable
         return approximateMemoryUsage.get();
     }
 
+    /**
+     * 添加数据（删除也是添加，只是ValueType不同）
+     */
     public void add(long sequenceNumber, ValueType valueType, Slice key, Slice value)
     {
         requireNonNull(valueType, "valueType is null");

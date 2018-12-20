@@ -23,6 +23,11 @@ import java.util.Map;
 /**
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
+
+/**
+ * DB
+ * 定义了各种基本操作
+ */
 public interface DB
         extends Iterable<Map.Entry<byte[], byte[]>>, Closeable
 {

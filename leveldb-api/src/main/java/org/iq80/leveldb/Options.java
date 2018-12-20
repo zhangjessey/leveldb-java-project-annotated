@@ -17,6 +17,9 @@
  */
 package org.iq80.leveldb;
 
+/**
+ * 各种配置信息
+ */
 public class Options
 {
     private boolean createIfMissing = true;

@@ -33,11 +33,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
+
+/**
+ * Iq80DB工厂
+ */
 public class Iq80DBFactory
         implements DBFactory
 {
     public static final int CPU_DATA_MODEL;
 
+    /**
+     * 判断32位还是64位系统
+     */
     static {
         boolean is64bit;
         if (System.getProperty("os.name").contains("Windows")) {
@@ -52,10 +59,12 @@ public class Iq80DBFactory
     // We only use MMAP on 64 bit systems since it's really easy to run out of
     // virtual address space on a 32 bit system when all the data is getting mapped
     // into memory.  If you really want to use MMAP anyways, use -Dleveldb.mmap=true
+    //我们只使用MMAP在64位系统上，因为在32位系统上，当把所有数据映射到内存时，很容易超出虚拟地址空间。
+    //如果你一定要用MMAP，可以用-Dleveldb.mmap=true
     public static final boolean USE_MMAP = Boolean.parseBoolean(System.getProperty("leveldb.mmap", "" + (CPU_DATA_MODEL > 32)));
-
+    //版本号
     public static final String VERSION;
-
+    //获取版本号
     static {
         String v = "unknown";
         InputStream is = Iq80DBFactory.class.getResourceAsStream("version.txt");
@@ -76,6 +85,9 @@ public class Iq80DBFactory
 
     public static final Iq80DBFactory factory = new Iq80DBFactory();
 
+    /**
+     * 返回一个DB对象
+     */
     @Override
     public DB open(File path, Options options)
             throws IOException

@@ -23,6 +23,10 @@ import java.io.IOException;
 /**
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
+
+/**
+ * DB工厂
+ */
 public interface DBFactory
 {
     DB open(File path, Options options)

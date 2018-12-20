@@ -80,6 +80,9 @@ import static org.iq80.leveldb.util.SizeOf.SIZE_OF_LONG;
 import static org.iq80.leveldb.util.Slices.readLengthPrefixedBytes;
 import static org.iq80.leveldb.util.Slices.writeLengthPrefixedBytes;
 
+/**
+ * DB实现
+ */
 // todo make thread safe and concurrent
 @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
 public class DbImpl

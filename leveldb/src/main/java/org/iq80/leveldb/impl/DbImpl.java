@@ -139,7 +139,9 @@ public class DbImpl
         internalKeyComparator = new InternalKeyComparator(userComparator);
         memTable = new MemTable(internalKeyComparator);
         immutableMemTable = null;
-
+        /**
+         * compaction线程
+         */
         ThreadFactory compactionThreadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("leveldb-compaction-%s")
                 .setUncaughtExceptionHandler(new UncaughtExceptionHandler()
@@ -156,12 +158,14 @@ public class DbImpl
         compactionExecutor = Executors.newSingleThreadExecutor(compactionThreadFactory);
 
         // Reserve ten files or so for other uses and give the rest to TableCache.
+        //保留10个左右文件用作其他用途，其余全部给TableCache
         int tableCacheSize = options.maxOpenFiles() - 10;
         tableCache = new TableCache(databaseDir, tableCacheSize, new InternalUserComparator(internalKeyComparator), options.verifyChecksums());
 
         // create the version set
 
         // create the database dir if it does not already exist
+        //如果没有则创建数据库目录
         databaseDir.mkdirs();
         checkArgument(databaseDir.exists(), "Database directory '%s' does not exist and could not be created", databaseDir);
         checkArgument(databaseDir.isDirectory(), "Database directory '%s' is not a directory", databaseDir);
@@ -169,9 +173,11 @@ public class DbImpl
         mutex.lock();
         try {
             // lock the database dir
+            //锁住数据库目录
             dbLock = new DbLock(new File(databaseDir, Filename.lockFileName()));
 
             // verify the "current" file
+            //校验当前文件
             File currentFile = new File(databaseDir, Filename.currentFileName());
             if (!currentFile.canRead()) {
                 checkArgument(options.createIfMissing(), "Database '%s' does not exist and the create if missing option is disabled", databaseDir);
@@ -183,6 +189,7 @@ public class DbImpl
             versions = new VersionSet(databaseDir, tableCache, internalKeyComparator);
 
             // load  (and recover) current version
+            //加载或者恢复当前版本
             versions.recover();
 
             // Recover from all newer log files than the ones named in the
@@ -192,6 +199,8 @@ public class DbImpl
             // Note that PrevLogNumber() is no longer used, but we pay
             // attention to it in case we are recovering a database
             // produced by an older version of leveldb.
+            //从所有较新的日志文件恢复，而不是在描述符中被命名的（新的日志文件可能已经被前面的化身添加，没有注册他们到文件描述符中）
+            //注意PrevLogNumber()方法不再被使用，但是我们要关注它，以防我们用老版本恢复一个数据库。
             long minLogNumber = versions.getLogNumber();
             long previousLogNumber = versions.getPrevLogNumber();
             List<File> filenames = Filename.listFiles(databaseDir);
@@ -208,6 +217,7 @@ public class DbImpl
             }
 
             // Recover in the order in which the logs were generated
+            //按照日志被生成的顺序恢复
             VersionEdit edit = new VersionEdit();
             Collections.sort(logs);
             for (Long fileNumber : logs) {
@@ -218,17 +228,21 @@ public class DbImpl
             }
 
             // open transaction log
+            //打开事务log
             long logFileNumber = versions.getNextFileNumber();
             this.log = Logs.createLogWriter(new File(databaseDir, Filename.logFileName(logFileNumber)), logFileNumber);
             edit.setLogNumber(log.getFileNumber());
 
             // apply recovered edits
+            // 应用被恢复的edits
             versions.logAndApply(edit);
 
             // cleanup unused files
+            //清空未使用的文件
             deleteObsoleteFiles();
 
             // schedule compactions
+            //调度压缩
             maybeScheduleCompaction();
         }
         finally {
@@ -236,6 +250,9 @@ public class DbImpl
         }
     }
 
+    /**
+     * 关闭db,关闭各种资源，防止泄露
+     */
     @Override
     public void close()
     {

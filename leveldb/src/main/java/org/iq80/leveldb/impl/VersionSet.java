@@ -55,6 +55,9 @@ import static java.util.Objects.requireNonNull;
 import static org.iq80.leveldb.impl.DbConstants.NUM_LEVELS;
 import static org.iq80.leveldb.impl.LogMonitors.throwExceptionMonitor;
 
+/**
+ * 管理所有version
+ */
 public class VersionSet
         implements SeekingIterable<InternalKey, Slice>
 {
@@ -329,6 +332,9 @@ public class VersionSet
         log.addRecord(record, false);
     }
 
+    /**
+     * 根据CURRENT文件包含的指针读取当前的manifest文件，即获取DB元信息
+     */
     public void recover()
             throws IOException
     {

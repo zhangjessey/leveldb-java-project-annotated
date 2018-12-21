@@ -38,6 +38,9 @@ import java.util.concurrent.ExecutionException;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * 缓存table的索引数据
+ */
 public class TableCache
 {
     private final LoadingCache<Long, TableAndFile> cache;

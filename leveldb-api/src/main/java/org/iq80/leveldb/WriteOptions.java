@@ -17,6 +17,10 @@
  */
 package org.iq80.leveldb;
 
+/**
+ * 写操作的配置
+ * 同步/异步 是否做快照
+ */
 public class WriteOptions
 {
     private boolean sync;

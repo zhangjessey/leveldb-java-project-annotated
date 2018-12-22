@@ -28,6 +28,11 @@ import java.util.Map.Entry;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * 批量写的实现
+ * 将key,value数据保存在batch中
+ * approximateSize存放粗略空间占用
+ */
 public class WriteBatchImpl
         implements WriteBatch
 {

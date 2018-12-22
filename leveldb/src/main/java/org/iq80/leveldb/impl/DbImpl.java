@@ -701,20 +701,25 @@ public class DbImpl
             throws DBException
     {
         checkBackgroundException();
+        //加锁
         mutex.lock();
         try {
             long sequenceEnd;
             if (updates.size() != 0) {
+                //为写操作分配空间
                 makeRoomForWrite(false);
 
                 // Get sequence numbers for this change set
+                //获取此次变更集合的序号
                 long sequenceBegin = versions.getLastSequence() + 1;
                 sequenceEnd = sequenceBegin + updates.size() - 1;
 
                 // Reserve this sequence in the version set
+                //保存序号到VersionSet
                 versions.setLastSequence(sequenceEnd);
 
                 // Log write
+                //写log
                 Slice record = writeWriteBatch(updates, sequenceBegin);
                 try {
                     log.addRecord(record, options.sync());
@@ -724,6 +729,7 @@ public class DbImpl
                 }
 
                 // Update memtable
+                //更新memtable
                 updates.forEach(new InsertIntoHandler(memTable, sequenceBegin));
             }
             else {
@@ -738,6 +744,7 @@ public class DbImpl
             }
         }
         finally {
+            //解锁
             mutex.unlock();
         }
     }

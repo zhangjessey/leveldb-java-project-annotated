@@ -21,6 +21,9 @@ import org.iq80.leveldb.Snapshot;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 实际快照
+ */
 public class SnapshotImpl
         implements Snapshot
 {

@@ -19,6 +19,9 @@ package org.iq80.leveldb;
 
 import java.io.Closeable;
 
+/**
+ * 快照
+ */
 public interface Snapshot
         extends Closeable
 {

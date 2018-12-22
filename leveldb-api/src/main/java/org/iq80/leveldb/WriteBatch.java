@@ -22,6 +22,11 @@ import java.io.Closeable;
 /**
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
+
+/**
+ * 批量写操作
+ * 实际对应批量增改删操作
+ */
 public interface WriteBatch
         extends Closeable
 {

@@ -609,6 +609,7 @@ public class DbImpl
             lookupKey = new LookupKey(Slices.wrappedBuffer(key), snapshot.getLastSequence());
 
             // First look in the memtable, then in the immutable memtable (if any).
+            //首先在memtable中查找，其次在immutable memtable中查找。
             LookupResult lookupResult = memTable.get(lookupKey);
             if (lookupResult != null) {
                 Slice value = lookupResult.getValue();
@@ -633,9 +634,11 @@ public class DbImpl
         }
 
         // Not in memTables; try live files in level order
+        //不在memTables中，尝试按照level顺序遍历文件
         LookupResult lookupResult = versions.get(lookupKey);
 
         // schedule compaction if necessary
+        //如果有必要则压缩
         mutex.lock();
         try {
             if (versions.needsCompaction()) {
